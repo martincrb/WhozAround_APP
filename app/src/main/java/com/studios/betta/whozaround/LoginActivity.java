@@ -3,14 +3,18 @@ package com.studios.betta.whozaround;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
+
+import android.os.Debug;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
-
+import com.facebook.FacebookSdk;
 
 public class LoginActivity extends Activity {
 
@@ -19,11 +23,14 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getActionBar().hide();
+        FacebookSdk.sdkInitialize(getApplicationContext());
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+        //FB dev hash
+        //Log.d("Facebook dev hash", FacebookSdk.getApplicationSignature(getApplicationContext()));
     }
 
 
