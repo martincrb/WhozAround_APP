@@ -13,11 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.studios.betta.whozaround.R;
 
 import java.util.ArrayList;
@@ -42,26 +39,8 @@ public class LoginFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
         //Init callbackManager (Should go to the Activity?)
-        FacebookSdk.sdkInitialize(getActivity());
-        callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(callbackManager,
-            new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                //Login success
-                Log.d(LOG_TAG, "Login with FB was a success");
-            }
+        Log.d("DEV FB HASH", FacebookSdk.getApplicationSignature(getActivity()));
 
-            @Override
-            public void onCancel() {
-                Log.d(LOG_TAG, "Login with FB was canceled");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.d(LOG_TAG, error.getMessage());
-            }
-        });
 
         fb_login_button = (Button) rootView.findViewById(R.id.login_fb_btn);
 
