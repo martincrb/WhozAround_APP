@@ -38,7 +38,7 @@
         android:text="@string/login_with_fb_text"
         android:background="?android:attr/selectableItemBackground"
         android:textColor="@android:color/white"
-        android:id="@+id/button"
+        android:id="@+id/login_fb_btn"
         android:fontFamily="sans-serif-light"
         android:textSize="20sp"
         android:layout_gravity="center_horizontal"

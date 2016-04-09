@@ -5,31 +5,27 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.studios.betta.whozaround.fragments.LoginFragment;
+import com.studios.betta.whozaround.fragments.MyTripsFragment;
 
 
-public class LoginActivity extends Activity {
-
+public class MyTripsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        getActionBar().hide();
-
+        setContentView(R.layout.activity_my_trips);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new LoginFragment())
+                    .add(R.id.container, new MyTripsFragment())
                     .commit();
         }
-
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
+        getMenuInflater().inflate(R.menu.menu_my_trips, menu);
         return true;
     }
 
