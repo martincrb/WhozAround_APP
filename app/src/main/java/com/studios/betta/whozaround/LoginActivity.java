@@ -35,7 +35,12 @@ public class LoginActivity extends Activity {
                     .commit();
         }
         configureFacebookLoginCallbacks();
-
+        Profile profile = Profile.getCurrentProfile();
+        if (profile != null) {
+            Log.v(LOG_TAG, "Logged, user name=" + profile.getFirstName() + " " + profile.getLastName());
+            Intent intent = new Intent(context_, MyTripsActivity.class);
+            startActivity(intent);
+        }
 
     }
 
