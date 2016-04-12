@@ -36,13 +36,12 @@ public class MyTripsFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         triplist.setLayoutManager(llm);
         ArrayList<Trip> trips = new ArrayList<Trip>();
-        trips.add(new Trip("Snow en la molina", "Mañana"));
-        trips.add(new Trip("Snow en Vallter", "Mañana"));
-        trips.add(new Trip("Snow en Andorra", "Mañana"));
-        trips.add(new Trip("Snow en la molina", "Mañana"));
-        trips.add(new Trip("Snow en la molina", "Mañana"));
+        trips.add(new Trip("Travel", "La Molina", "Día de snow fantástico", "Mañana", R.drawable.bcn));
+        trips.add(new Trip("Travel", "Vallter", "Día de snow fantástico", "Pasado", R.drawable.bcn));
+        trips.add(new Trip("Travel", "St Eulalia", "Barbeque con los coleguis <3", "En veranico", R.drawable.bcn));
+        trips.add(new Trip("Travel", "La Molina", "Día de snow fantástico", "2/1/17", R.drawable.bcn));
+        trips.add(new Trip("Travel", "La Molina", "Día de snow fantástico","2/1/17", R.drawable.bcn));
 
-        trips.add(new Trip("BBQ Casa muñi", "Ayer"));
         TripAdapter adapter = new TripAdapter(trips);
         triplist.setAdapter(adapter);
         return rootView;

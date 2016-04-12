@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.studios.betta.whozaround.R;
@@ -32,8 +33,16 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
     @Override
     public void onBindViewHolder(TripViewHolder tripViewHolder, int i) {
+        tripViewHolder.type.setText(trips.get(i).title);
+
+        tripViewHolder.location.setText(trips.get(i).location);
+
         tripViewHolder.date.setText(trips.get(i).date);
-        tripViewHolder.name.setText(trips.get(i).title);
+
+        tripViewHolder.description.setText(trips.get(i).description);
+
+        tripViewHolder.image.setImageResource(trips.get(i).image);
+
     }
 
     @Override
@@ -48,14 +57,20 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
     public static class TripViewHolder extends  RecyclerView.ViewHolder {
         CardView cv;
-        TextView name;
+        TextView type;
+        TextView location;
+        TextView description;
         TextView date;
+        ImageView image;
 
         TripViewHolder(View itemView) {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cv);
-            name = (TextView) itemView.findViewById(R.id.trip_name);
-            date = (TextView) itemView.findViewById(R.id.trip_date);
+            type = (TextView) itemView.findViewById(R.id.plan_type);
+            location = (TextView) itemView.findViewById(R.id.trip_location);
+            description = (TextView) itemView.findViewById(R.id.description_text);
+            date = (TextView) itemView.findViewById(R.id.date_text);
+            image = (ImageView) itemView.findViewById(R.id.location_image);
         }
     }
 }

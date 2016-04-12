@@ -13,5 +13,8 @@
     <item name="amber_300" type="color">#ffd54f</item>
     <item name="amber_200" type="color">#ffe082</item>
     <item name="fbcolor" type="color">#3b5998</item>
+    <item name="teal_a100" type="color">#A7FFEB</item>
+    <item name="teal_50" type="color">#E0F2F1</item>
+    <item name="bluegray_50" type="color">#ECEFF1</item>
 
 </resources>
