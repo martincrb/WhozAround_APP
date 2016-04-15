@@ -50,6 +50,7 @@ public class LoginFragment extends Fragment {
                 ArrayList<String> permissions = new ArrayList<String>();
                 permissions.add("public_profile");
                 permissions.add("user_friends");
+                permissions.add("user_events");
                 LoginManager.getInstance().logInWithReadPermissions(getActivity(), permissions);
             }
         });

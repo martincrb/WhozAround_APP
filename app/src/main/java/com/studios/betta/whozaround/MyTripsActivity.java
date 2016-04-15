@@ -13,6 +13,8 @@ public class MyTripsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActionBar().hide();
+
         setContentView(R.layout.activity_my_trips);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
