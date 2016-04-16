@@ -38,6 +38,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.studios.betta.whozaround.MyTripsActivity" />
         </activity>
+        <activity
+            android:name=".TripDetailActivity"
+            android:label="@string/title_activity_trip_detail"
+            android:parentActivityName=".MyTripsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.studios.betta.whozaround.MyTripsActivity" />
+        </activity>
     </application>
 
 </manifest>

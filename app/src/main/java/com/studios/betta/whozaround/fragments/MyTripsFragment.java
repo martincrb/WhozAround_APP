@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.studios.betta.whozaround.CreateTripActivity;
 import com.studios.betta.whozaround.R;
+import com.studios.betta.whozaround.TripDetailActivity;
 import com.studios.betta.whozaround.adapters.TripAdapter;
 import com.studios.betta.whozaround.network.FacebookUtils;
 import com.studios.betta.whozaround.objects.Trip;
@@ -33,14 +33,20 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MyTripsFragment extends Fragment {
 
-    private RecyclerView triplist;
-    private Button add_trip_button;
-    private ImageView profile_image;
+    //Bind widgets to objects (Butterknife <3)
+    @Bind(R.id.triplist)        RecyclerView triplist;
+    @Bind(R.id.add_trip_button) Button add_trip_button;
+    @Bind(R.id.profile_picture) ImageView profile_image;
+
     public MyTripsFragment() {
     }
 
@@ -48,32 +54,36 @@ public class MyTripsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my_trips, container, false);
-        triplist = (RecyclerView) rootView.findViewById(R.id.triplist);
-        profile_image = (ImageView) rootView.findViewById(R.id.profile_picture);
+        ButterKnife.bind(this, rootView);
+
         //We use linearmanager as layout
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         triplist.setLayoutManager(llm);
+
         final ArrayList<Trip> trips = new ArrayList<Trip>();
         trips.add(new Trip("Travel", "La Molina", "Día de snow fantástico", "Mañana", R.drawable.bcn));
         trips.add(new Trip("Travel", "Vallter", "Día de snow fantástico", "Pasado", R.drawable.bcn));
-        //trips.add(new Trip("Travel", "St Eulalia", "Barbeque con los coleguis <3", "En veranico", R.drawable.bcn));
-        //trips.add(new Trip("Travel", "La Molina", "Día de snow fantástico", "2/1/17", R.drawable.bcn));
-        //trips.add(new Trip("Travel", "La Molina", "Día de snow fantástico","2/1/17", R.drawable.bcn));
+
 
         final TripAdapter adapter = new TripAdapter(trips, getActivity());
-        triplist.setAdapter(adapter);
-
-        //Add Trip Button
-        add_trip_button = (Button) rootView.findViewById(R.id.add_trip_button);
-        add_trip_button.setOnClickListener(new View.OnClickListener() {
+        adapter.setOnItemClickListener(new TripAdapter.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                //Move to create trip screen
-                Intent intent = new Intent(getActivity(), CreateTripActivity.class);
+            public void onItemClick(View itemView, int position) {
+                //Butterknife does not support onItemClick on adapter for RecyclerViews
+                String name = trips.get(position).location;
+                Intent intent = new Intent(getActivity(), TripDetailActivity.class);
+                if (trips.get(position).image == -1) {
+                    intent.putExtra("image_type", "ID");
+                    intent.putExtra("image", trips.get(position).image_url);
+                }
+                else {
+                    intent.putExtra("image_type", "URL");
+                    intent.putExtra("image", trips.get(position).image);
+                }
                 startActivity(intent);
-                //getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_right);
             }
         });
+        triplist.setAdapter(adapter);
 
         FacebookUtils.setUserProfilePicture(profile_image, getActivity());
         FacebookUtils.getUserFriends();
@@ -87,55 +97,28 @@ public class MyTripsFragment extends Fragment {
                 HttpMethod.GET,
                 new GraphRequest.Callback() {
                     public void onCompleted(GraphResponse response) {
-            /* handle the result */
                         JSONObject data = response.getJSONObject();
                         try {
                             JSONArray events = data.getJSONArray("data");
                             for (int i = 0; i < events.length(); ++i) {
-
                                 JSONObject event = events.getJSONObject(i);
-                                String category, name, place, city, image_url, description;
-                                category = name = place = image_url = description = city = "Not available";
-                                if (event.has("category")) {
-                                    category = event.getString("category");
-                                }
-                                if (event.has("name")) {
-                                    name = event.getString("name");
-                                }
-                                if (event.has("place")) {
-                                    place = event.getJSONObject("place").getString("name");
-                                    if (event.getJSONObject("place").has("location")) {
-                                        city = event.getJSONObject("place").getJSONObject("location").getString("city");
-                                    }
-                                }
-                                if (event.has("cover")) {
-                                    image_url = event.getJSONObject("cover").getString("source");
-                                }
-                                if (event.has("category")) {
-                                    category = event.getString("category");
-                                }
-                                if (event.has("description")) {
-                                    description = event.getString("description");
-                                }
-
-                                Log.d("Event details", name + " " + city);
-                                //getFacebookEvent(event.getString("id"));
-                                Trip t = new Trip(category, city, description, "Never", image_url);
-                                t.setIsFb(true);
+                                Trip t = Trip.fromFBEventJSONObject(event);
                                 trips.add(t);
-
                             }
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 }
         ).executeAsync();
-
-
-
         return rootView;
+    }
+
+    @OnClick(R.id.add_trip_button)
+    public void startCreateTripActivity() {
+        //Move to create trip screen
+        Intent intent = new Intent(getActivity(), CreateTripActivity.class);
+        startActivity(intent);
     }
 }
