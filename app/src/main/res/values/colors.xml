@@ -8,6 +8,8 @@
     <item name="light_blue_200" type="color">#81d4fa</item>
     <item name="light_blue_100" type="color">#b3e5fc</item>
 
+    <item name="whozcolor" type="color">#01bea4</item>
+
     <item name="amber_500" type="color">#ffc107</item>
     <item name="amber_400" type="color">#ffca28</item>
     <item name="amber_300" type="color">#ffd54f</item>

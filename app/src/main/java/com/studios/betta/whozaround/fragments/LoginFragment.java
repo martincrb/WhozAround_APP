@@ -18,6 +18,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
+import com.squareup.picasso.Picasso;
 import com.studios.betta.whozaround.R;
 
 import java.util.ArrayList;
@@ -34,7 +35,8 @@ public class LoginFragment extends Fragment {
     private static final String LOG_TAG = LoginFragment.class.getSimpleName();
 
     @Bind (R.id.login_fb_btn) Button fb_login_button;
-    @Bind (R.id.title_login) ImageView title;
+    @Bind (R.id.logo_login) ImageView title;
+    @Bind (R.id.bg_login) ImageView bg;
     CallbackManager callbackManager;
 
     public LoginFragment() {
@@ -45,6 +47,7 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, rootView);
+        Picasso.with(getActivity()).load(R.drawable.login_background).into(bg);
         //Init callbackManager (Should go to the Activity?)
         Log.d("DEV FB HASH", FacebookSdk.getApplicationSignature(getActivity()));
         YoYo.with(Techniques.BounceInDown).duration(1000).playOn(title);
