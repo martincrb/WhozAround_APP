@@ -103,7 +103,9 @@ public class MyTripsFragment extends Fragment {
                             for (int i = 0; i < events.length(); ++i) {
                                 JSONObject event = events.getJSONObject(i);
                                 Trip t = Trip.fromFBEventJSONObject(event);
-                                trips.add(t);
+
+                                //TODO: FB EVENTS?
+                                //trips.add(t);
                             }
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
@@ -116,6 +118,8 @@ public class MyTripsFragment extends Fragment {
     }
 
     @OnClick(R.id.add_trip_button)
+
+
     public void startCreateTripActivity() {
         //Move to create trip screen
         Intent intent = new Intent(getActivity(), CreateTripActivity.class);

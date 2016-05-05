@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/WhozAroundF.iml" filepath="$PROJECT_DIR$/WhozAroundF.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RESTDroid/RESTDroid.iml" filepath="$PROJECT_DIR$/RESTDroid/RESTDroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/WhozAround_APP.iml" filepath="$PROJECT_DIR$/WhozAround_APP.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>
-

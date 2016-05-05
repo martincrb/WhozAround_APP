@@ -1,9 +1,12 @@
 package com.studios.betta.whozaround;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,11 +18,19 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.studios.betta.whozaround.fragments.LoginFragment;
+import com.studios.betta.whozaround.network.services.GCMPreferences;
+import com.studios.betta.whozaround.network.services.RegistrationIntentService;
 
 
 public class LoginActivity extends Activity {
     private static final String LOG_TAG = LoginActivity.class.getSimpleName();
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private boolean isReceiverRegistered;
+
     Context context_;
     CallbackManager callbackManager;
 
@@ -35,6 +46,16 @@ public class LoginActivity extends Activity {
                     .add(R.id.container, new LoginFragment())
                     .commit();
         }
+        // Registering BroadcastReceiver
+      //  registerReceiver();
+
+        if (checkPlayServices()) {
+            // Start IntentService to register this application with GCM.
+            Log.d(LOG_TAG, "STARTING REG SERVICE");
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+
         configureFacebookLoginCallbacks();
         Profile profile = Profile.getCurrentProfile();
         if (profile != null) {
@@ -98,6 +119,42 @@ public class LoginActivity extends Activity {
                     }
                 });
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //registerReceiver();
+    }
+
+    @Override
+    protected void onPause() {
+      //  LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+       // isReceiverRegistered = false;
+        super.onPause();
+    }
+
+    private void registerReceiver(){
+        if(!isReceiverRegistered) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                    new IntentFilter(GCMPreferences.REGISTRATION_COMPLETE));
+            isReceiverRegistered = true;
+        }
+    }
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(LOG_TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
 
 
 }

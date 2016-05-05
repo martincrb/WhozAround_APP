@@ -7,6 +7,8 @@
     <string name="login_title">LOG IN</string>
     <string name="facebook_app_id">1521457198165372</string>
 
+    <string name="gcm_server_api_key">AIzaSyCQ8jg3NTX5MzggS18dfimxV-P6TZ1hVbc</string>
+    <string name="gcm_sender_id">717314626009</string>
     <string name="login_with_fb_text">Log in with Facebook</string>
     <string name="title_activity_my_trips">MyTripsActivity</string>
 
