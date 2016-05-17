@@ -52,20 +52,20 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     public void onBindViewHolder(TripViewHolder tripViewHolder, int i) {
         YoYo.with(Techniques.FadeIn).duration(500).playOn(tripViewHolder.cv);
 
-        tripViewHolder.type.setText(trips.get(i).title);
-        tripViewHolder.location.setText(trips.get(i).location);
-        tripViewHolder.date.setText(trips.get(i).date);
-        tripViewHolder.description.setText(trips.get(i).description);
+        tripViewHolder.type.setText(trips.get(i).getTitle());
+        tripViewHolder.location.setText(trips.get(i).getCity());
+        tripViewHolder.date.setText(trips.get(i).getDateFrom());
+        tripViewHolder.description.setText(trips.get(i).getDescription());
 
-        if (!trips.get(i).isFb()) {
+        if (!trips.get(i).getIsFb()) {
             tripViewHolder.fb_marker.setText("");
         }
-        if (trips.get(i).image == -1) {
-            Picasso.with(context).load(trips.get(i).image_url).into(tripViewHolder.image);
+        if (trips.get(i).getImage() == -1) {
+            Picasso.with(context).load(trips.get(i).getImageUrl()).into(tripViewHolder.image);
             //tripViewHolder.image.setImageResource(trips.get(i).image);
         }
         else {
-            tripViewHolder.image.setImageResource(trips.get(i).image);
+            tripViewHolder.image.setImageResource(trips.get(i).getImage());
         }
     }
 

@@ -66,6 +66,7 @@ public class LoginFragment extends Fragment {
         permissions.add("public_profile");
         permissions.add("user_friends");
         permissions.add("user_events");
+        permissions.add("user_hometown");
         LoginManager.getInstance().logInWithReadPermissions(getActivity(), permissions);
     }
 }

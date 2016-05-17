@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "717314626009",
+    "project_id": "whozaround-a6d83"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:717314626009:android:016c896b7b76a2a3",
+        "android_client_info": {
+          "package_name": "com.studios.betta.whozaround"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD0H7Fo1VJLrL9A5y0fZVjHWqi7FLlGSM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

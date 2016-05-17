@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
@@ -21,8 +23,16 @@ import com.facebook.login.LoginResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.studios.betta.whozaround.fragments.LoginFragment;
+import com.studios.betta.whozaround.network.WhozAroundEndpointInterface;
 import com.studios.betta.whozaround.network.services.GCMPreferences;
 import com.studios.betta.whozaround.network.services.RegistrationIntentService;
+import com.studios.betta.whozaround.objects.User;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class LoginActivity extends Activity {
@@ -104,11 +114,15 @@ public class LoginActivity extends Activity {
                     public void onSuccess(LoginResult loginResult) {
                         //Login success
                         Log.d(LOG_TAG, "Login with FB was a success");
-                        Intent intent = new Intent(context_, MyTripsActivity.class);
-                        startActivity(intent);
-                    }
 
-                    @Override
+                            sendUserToServer();
+
+                            Intent intent = new Intent(context_, MyTripsActivity.class);
+
+                            startActivity(intent);
+                        }
+
+                        @Override
                     public void onCancel() {
                         Log.d(LOG_TAG, "Login with FB was canceled");
                     }
@@ -132,6 +146,48 @@ public class LoginActivity extends Activity {
         super.onPause();
     }
 
+    private void sendUserToServer() {
+        Log.d(LOG_TAG, "SENDING USER TO SERVER");
+        //Send user to Server
+        String BASE_URL = "http://52.38.181.114/";
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        WhozAroundEndpointInterface apiService = retrofit.create(WhozAroundEndpointInterface.class);
+
+
+        //Get GCM Token
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String gcm_token = sharedPreferences.getString(GCMPreferences.GCM_TOKEN, "");
+
+        Profile profile = Profile.getCurrentProfile();
+
+        User user = new User(profile.getName(),
+                profile.getFirstName(),
+                profile.getLastName(),
+                "",
+                "",
+                "",
+                "0",
+                gcm_token);
+
+        Call<User> call = apiService.createUser(user);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                Log.d(LOG_TAG, "RESPONSE");
+
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.d(LOG_TAG, "FAILURE");
+            }
+        });
+
+    }
     private void registerReceiver(){
         if(!isReceiverRegistered) {
             LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
