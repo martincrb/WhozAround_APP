@@ -21,6 +21,7 @@ import com.studios.betta.whozaround.R;
 public class GCMListenerService extends GcmListenerService {
 
     private static final String TAG = "MyGcmListenerService";
+    private static final String LOGO = "ic_stat_logo";
 
     /**
      * Called when message is received.
@@ -32,7 +33,7 @@ public class GCMListenerService extends GcmListenerService {
     // [START receive_message]
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
+        String message = data.getString("body");
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
 
@@ -54,7 +55,7 @@ public class GCMListenerService extends GcmListenerService {
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        sendNotification(message);
+        sendNotification(data.getString("title"), message, data.getString("icon"));
         // [END_EXCLUDE]
     }
     // [END receive_message]
@@ -64,16 +65,20 @@ public class GCMListenerService extends GcmListenerService {
      *
      * @param message GCM message received.
      */
-    private void sendNotification(String message) {
+    private void sendNotification(String title, String message, String icon) {
         Intent intent = new Intent(this, MyTripsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
+        int drawable_id = R.drawable.ic_stat_logo;
+        if (icon == LOGO) { //Add more images?
+            drawable_id = R.drawable.ic_stat_logo;
+        }
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.fb_icon)
-                .setContentTitle("GCM Message")
+                .setSmallIcon(R.drawable.ic_stat_logo)
+                .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)

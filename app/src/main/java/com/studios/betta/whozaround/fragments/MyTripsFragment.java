@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
@@ -64,8 +65,16 @@ public class MyTripsFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "OnCreate");
+        trips = new ArrayList<Trip>();
+        getTripsFromServer();
+        super.onCreate(savedInstanceState);
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "OnCreateView");
         View rootView = inflater.inflate(R.layout.fragment_trips, container, false);
         ButterKnife.bind(this, rootView);
 
@@ -73,14 +82,15 @@ public class MyTripsFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         triplist.setLayoutManager(llm);
 
-        trips = new ArrayList<Trip>();
+
         //Get the trips from the server
-        getTripsFromServer();
+
         //trips.add(new Trip("Travel", "La Molina", "Día de snow fantástico", "Mañana", R.drawable.bcn));
        // trips.add(new Trip("Travel", "Vallter", "Día de snow fantástico", "Pasado", R.drawable.bcn));
 
 
         adapter = new TripAdapter(trips, getActivity());
+
         adapter.setOnItemClickListener(new TripAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
@@ -132,6 +142,14 @@ public class MyTripsFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        Log.d(LOG_TAG, "OnResume");
+        getTripsFromServer();
+
+        super.onResume();
+    }
+
     @OnClick(R.id.add_trip_button)
     public void startCreateTripActivity() {
         //Move to create trip screen
@@ -140,7 +158,7 @@ public class MyTripsFragment extends Fragment {
     }
 
     public void getTripsFromServer() {
-        trips.clear();
+
         String BASE_URL = "http://52.38.181.114/";
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -148,14 +166,16 @@ public class MyTripsFragment extends Fragment {
                 .build();
         WhozAroundEndpointInterface apiService = retrofit.create(WhozAroundEndpointInterface.class);
 
-
+        FacebookSdk.sdkInitialize(getActivity());
         Call<List<Trip>> call = apiService.getTrips(Profile.getCurrentProfile().getName());
         call.enqueue(new Callback<List<Trip>>() {
             @Override
             public void onResponse(Call<List<Trip>> call, Response<List<Trip>> response) {
                 Log.d(LOG_TAG, "RESPONSE TRIP");
                 Log.d(LOG_TAG, "Received trips "+response.body().size());
+                trips.clear();
                 for (int i=0; i<response.body().size(); i++) {
+
                     trips.add(response.body().get(i));
 
                 }

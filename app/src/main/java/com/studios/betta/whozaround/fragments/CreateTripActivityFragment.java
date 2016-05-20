@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.Profile;
 import com.studios.betta.whozaround.R;
@@ -124,12 +125,13 @@ public class CreateTripActivityFragment extends Fragment {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
                 Log.d(LOG_TAG, "RESPONSE SEND TRIP");
-
+                getActivity().finish();
             }
 
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
-                Log.d(LOG_TAG, "FAILURE SEND TRIP"+t.getLocalizedMessage());
+                Log.d(LOG_TAG, "FAILURE SEND TRIP" + t.getLocalizedMessage());
+                Toast.makeText(getActivity(), "Failure sending trip to server", Toast.LENGTH_LONG).show();
             }
         });
     }

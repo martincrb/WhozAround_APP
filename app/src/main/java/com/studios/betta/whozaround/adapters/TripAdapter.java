@@ -3,6 +3,7 @@ package com.studios.betta.whozaround.adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +61,8 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         if (!trips.get(i).getIsFb()) {
             tripViewHolder.fb_marker.setText("");
         }
-        if (trips.get(i).getImage() == -1) {
+        if (trips.get(i).getImageUrl() != "url") {
+            Log.d("IMAGE", trips.get(i).getImageUrl());
             Picasso.with(context).load(trips.get(i).getImageUrl()).into(tripViewHolder.image);
             //tripViewHolder.image.setImageResource(trips.get(i).image);
         }
