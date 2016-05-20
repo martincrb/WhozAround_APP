@@ -13,10 +13,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -27,6 +31,10 @@ import com.studios.betta.whozaround.network.WhozAroundEndpointInterface;
 import com.studios.betta.whozaround.network.services.GCMPreferences;
 import com.studios.betta.whozaround.network.services.RegistrationIntentService;
 import com.studios.betta.whozaround.objects.User;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -154,38 +162,67 @@ public class LoginActivity extends Activity {
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        WhozAroundEndpointInterface apiService = retrofit.create(WhozAroundEndpointInterface.class);
+        final WhozAroundEndpointInterface apiService = retrofit.create(WhozAroundEndpointInterface.class);
 
 
         //Get GCM Token
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String gcm_token = sharedPreferences.getString(GCMPreferences.GCM_TOKEN, "");
+        final String gcm_token = sharedPreferences.getString(GCMPreferences.GCM_TOKEN, "");
 
-        Profile profile = Profile.getCurrentProfile();
+        final Profile profile = Profile.getCurrentProfile();
 
-        User user = new User(profile.getName(),
-                profile.getFirstName(),
-                profile.getLastName(),
-                "",
-                "",
-                "",
-                "0",
-                gcm_token);
+        Bundle params = new Bundle();
+        params.putString("fields", "id,email,gender,cover,picture.type(large)");
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/me/friends",
+                params,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+            /* handle the result */
+                        JSONObject data = response.getJSONObject();
+                        try {
+                            JSONArray friends = data.getJSONArray("data");
+                            User user = new User(profile.getId(),
+                                    profile.getFirstName(),
+                                    profile.getLastName(),
+                                    "",
+                                    "",
+                                    "",
+                                    "0",
+                                    gcm_token);
+                            for (int i = 0; i < friends.length(); ++i) {
+                                String id = friends.getJSONObject(i).getString("id");
+                                user.addFriend(id);
 
-        Call<User> call = apiService.createUser(user);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                Log.d(LOG_TAG, "RESPONSE");
+                            }
+                            //Log.d("Friendlist", friends.toString());
+                            //Prepare connection
 
-            }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.d(LOG_TAG, "FAILURE");
-            }
-        });
+                            Call<User> call = apiService.createUser(user);
+                            call.enqueue(new Callback<User>() {
+                                @Override
+                                public void onResponse(Call<User> call, Response<User> response) {
+                                    Log.d(LOG_TAG, "RESPONSE");
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<User> call, Throwable t) {
+                                    Log.d(LOG_TAG, "FAILURE");
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+        ).executeAsync();
+
 
     }
     private void registerReceiver(){

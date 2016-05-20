@@ -26,5 +26,10 @@ public class User {
         this.gcmToken = gcm_token;
         this.gender = gender;
         this.age = Integer.parseInt(age);
+        friends = new ArrayList<String>();
+    }
+
+    public void addFriend(String friendid) {
+        friends.add(friendid);
     }
 }
