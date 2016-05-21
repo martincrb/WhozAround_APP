@@ -107,7 +107,7 @@ public class CreateTripActivityFragment extends Fragment {
         String desc = description_edit.getText().toString();
 
         //String title, String location, String description, String date_from, String image_url
-        Trip newT = new Trip(from, to, city, desc, "url", 0, Profile.getCurrentProfile().getName(), "WzArnd BETA", false);
+        Trip newT = new Trip(from, to, city, desc, "url", 0, Profile.getCurrentProfile().getId(), "WzArnd BETA", false);
         sendTripToServer(newT);
     }
 
